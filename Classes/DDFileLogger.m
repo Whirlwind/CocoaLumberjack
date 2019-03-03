@@ -983,7 +983,7 @@ unsigned long long const kDDDefaultLogFilesDiskQuota   = 20 * 1024 * 1024; // 20
  * Otherwise a new file is created and returned.
  **/
 - (DDLogFileInfo *)currentLogFileInfo {
-    if (!_currentLogFileInfo)
+    if (!_currentLogFileInfo) {
         // The design of this method is taken from the DDAbstractLogger implementation.
         // For extensive documentation please refer to the DDAbstractLogger implementation.
         // Do not access this method on any Lumberjack queue, will deadlock.
