@@ -175,4 +175,10 @@
 - (void)clearColorsForAllTags;
 - (void)clearAllColors;
 
+/**
+ * Override this method by subclass will allow user custom the pipe: `STDERR` or `STDOUT`.
+ * Defaults to `STDERR` when the logMessage's level is error, otherwise `STDOUT`.
+ */
+- (int)stdForLogMessage:(DDLogMessage *)logMessage NS_SWIFT_NAME(std(for:));
+
 @end
