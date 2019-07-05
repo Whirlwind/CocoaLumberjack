@@ -884,6 +884,7 @@ static DDTTYLogger *sharedInstance;
         _colorProfilesDict = [[NSMutableDictionary alloc] initWithCapacity:8];
 
         _automaticallyAppendNewlineForCustomFormatters = YES;
+        _useStandardStyleForCustomFormatters = NO;
     }
 
     return self;
@@ -1167,11 +1168,9 @@ static DDTTYLogger *sharedInstance;
 
 - (void)logMessage:(DDLogMessage *)logMessage {
     NSString *logMsg = logMessage->_message;
-    BOOL isFormatted = NO;
 
     if (_logFormatter) {
         logMsg = [_logFormatter formatLogMessage:logMessage];
-        isFormatted = logMsg != logMessage->_message;
     }
 
     if (logMsg) {
@@ -1234,8 +1233,7 @@ static DDTTYLogger *sharedInstance;
         // Write the log message to `std`
         int std = [self stdForLogMessage: logMessage];
 
-        if (isFormatted) {
-            // The log message has already been formatted.
+        if (_logFormatter && !_useStandardStyleForCustomFormatters) {
             int iovec_len = (_automaticallyAppendNewlineForCustomFormatters) ? 5 : 4;
             struct iovec v[iovec_len];
 
@@ -1269,7 +1267,7 @@ static DDTTYLogger *sharedInstance;
 
             writev(std, v, iovec_len);
         } else {
-            // The log message is unformatted, so apply standard NSLog style formatting.
+            // Apply standard NSLog style formatting.
 
             int len;
             char ts[24] = "";
